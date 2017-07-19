@@ -2,6 +2,7 @@ package com.github.pgutkowski.kgraphqlnba.player
 
 import com.github.pgutkowski.kgraphql.schema.dsl.SchemaBuilder
 import com.github.pgutkowski.kgraphqlnba.ApiConfigurator
+import com.github.pgutkowski.kgraphqlnba.NotFoundException
 import com.github.pgutkowski.kgraphqlnba.team.Team
 import com.github.pgutkowski.kgraphqlnba.tenure.Tenure
 import com.github.pgutkowski.kgraphqlnba.tenure.TenureRepository
@@ -20,7 +21,7 @@ open class PlayerApiConfigurator(val players: PlayerRepository, val tenures: Ten
         }
 
         query("player"){
-            resolver { id: Int -> players.findOne(id) }
+            resolver { id: Int -> players.findOne(id) ?: throw NotFoundException("Player with id $id does not exist") }
         }
 
         type<Player>{
