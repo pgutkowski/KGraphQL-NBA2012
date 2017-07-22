@@ -12,6 +12,10 @@ open class ApiConfiguration(val configs: List<ApiConfigurator>) {
     @Bean
     fun getSchema() : Schema = KGraphQL.schema {
 
+        configure {
+            useDefaultPrettyPrinter = true
+        }
+
         stringScalar<LocalDate> {
             serialize = { date -> date.toString() }
             deserialize = { dateString -> LocalDate.parse(dateString)}

@@ -7,7 +7,9 @@ import com.github.pgutkowski.kgraphqlnba.player.Player
 import com.github.pgutkowski.kgraphqlnba.team.Team
 import com.github.pgutkowski.kgraphqlnba.tenure.Tenure
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.hasSize
 import org.hamcrest.Matchers.notNullValue
 import org.hamcrest.Matchers.startsWith
@@ -92,6 +94,17 @@ class ApplicationTests {
 		assertThat(game.homeTeam?.id, equalTo("NYK"))
 		assertThat(game.awayTeam?.id, equalTo("BOS"))
 	}
+
+	@Test
+	fun getPlayerByName(){
+		val searchName = "James"
+		val players = queryList<Player>("{players(name: \"$searchName\"){id, name}}", "players")
+		players.forEach { player ->
+			assertThat(player.name, containsString(searchName))
+			assertThat(player.id, greaterThan(0)) // 0 is default Player id after deserialization
+		}
+	}
+
 
 	inline fun <reified T>queryList(fullQuery: String, vararg fieldPath: String): List<T> {
 		val responseBody = restTemplate.getForObject("/api?query={query}", JsonNode::class.java, fullQuery)

@@ -24,7 +24,7 @@ open class TenureImporter : CSVDataImporter() {
     @Autowired
     lateinit var playerRepository: PlayerRepository
 
-    override fun import() = importFromCsv(tenuresResource.inputStream) {row ->
+    override fun import() = importFromCsv(tenuresResource.inputStream) { row ->
         val player = playerRepository.findOne(row[0].toInt())
                 ?: throw IllegalArgumentException("Cannot import tenure without valid player id")
         val team = teamRepository.findOne(row[4])
